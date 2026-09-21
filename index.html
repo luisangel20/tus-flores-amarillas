@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feliz 21 de Septiembre 🌼</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;min-height:100%;font-family:'Poppins',sans-serif}
+  body{
+    overflow-x:hidden;
+    color:#fff;
+    background:
+      radial-gradient(circle at 50% 25%,rgba(255,210,90,.15),transparent 35%),
+      radial-gradient(circle at 15% 80%,rgba(255,190,50,.08),transparent 30%),
+      linear-gradient(135deg,#171218 0%,#241a1b 48%,#120f14 100%);
+  }
+  #petals{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+  .content{position:relative;z-index:2;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:32px 16px 24px}
+  .title{text-align:center;margin-bottom:8px}
+  .title h1{
+    margin:0;font-family:'Montserrat',sans-serif;font-size:clamp(1.6rem,4vw,2.5rem);
+    font-weight:600;letter-spacing:.06em;text-shadow:0 3px 20px rgba(255,200,50,.25)
+  }
+  .title p{margin:6px 0 0;color:#ffe9a8;font-size:1rem;letter-spacing:.1em;font-weight:500}
+  
+  .bouquet-wrap{
+    width:min(880px,100%);height:min(680px,72vh);min-height:500px;
+    margin-top:2px;display:flex;align-items:center;justify-content:center;
+    animation:appear 1.6s ease-out both;
+    filter:drop-shadow(0 25px 35px rgba(0,0,0,.35));
+    cursor:pointer;
+    transition:transform .3s ease;
+  }
+  .bouquet-wrap:hover{transform:scale(1.01)}
+  
+  svg{width:100%;height:100%;overflow:visible}
+  .sway{transform-box:fill-box;transform-origin:50% 100%;animation:sway 5s ease-in-out infinite}
+  .sway2{animation-delay:-2s}
+  .flower{transform-box:fill-box;transform-origin:50% 50%;animation:flowerSway 6s ease-in-out infinite}
+  .flower.delay{animation-delay:-2s}
+  .flower.delay2{animation-delay:-4s}
+  
+  @keyframes appear{from{opacity:0;transform:translateY(80px) scale(.94)}to{opacity:1;transform:none}}
+  @keyframes sway{0%,100%{transform:rotate(-1deg)}50%{transform:rotate(1.4deg)}}
+  @keyframes flowerSway{0%,100%{transform:rotate(-1deg)}50%{transform:rotate(1.2deg)}}
+
+  .glass-card{
+    background:rgba(35, 27, 30, 0.75);
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+    border:1px solid rgba(255, 215, 100, 0.2);
+    box-shadow:0 10px 30px rgba(0,0,0,0.5);
+  }
+
+  .pulse-glow{
+    animation:pulseGlow 2.5s infinite;
+  }
+  @keyframes pulseGlow{
+    0%,100%{box-shadow:0 0 15px rgba(255,215,100,0.3)}
+    50%{box-shadow:0 0 30px rgba(255,215,100,0.7)}
+  }
+</style>
+</head>
+
+<body>
+<canvas id="petals"></canvas>
+
+<div class="content">
+  <div class="title">
+    <h1 id="mainTitle">Feliz Día del 21 de Septiembre</h1>
+    <p id="subTitle">Para Mi Persona Favorita 🌼</p>
+  </div>
+
+  <!-- Interactive Controls Bar -->
+  <div class="flex flex-wrap items-center justify-center gap-3 my-2 z-10">
+    <button onclick="openLetterModal()" class="px-4 py-2 rounded-full glass-card text-amber-200 font-medium text-sm hover:bg-amber-500/20 transition flex items-center gap-2 border border-amber-400/30 shadow-lg">
+      <i class="fa-solid fa-envelope-open-text text-amber-300"></i> Leer Cartita
+    </button>
+    <button onclick="toggleMusic()" id="musicBtn" class="px-4 py-2 rounded-full glass-card text-amber-200 font-medium text-sm hover:bg-amber-500/20 transition flex items-center gap-2 border border-amber-400/30 shadow-lg">
+      <i class="fa-solid fa-music text-amber-300" id="musicIcon"></i> <span id="musicText">Reproducir Melodía</span>
+    </button>
+    <button onclick="triggerConfetti()" class="px-4 py-2 rounded-full glass-card text-amber-200 font-medium text-sm hover:bg-amber-500/20 transition flex items-center gap-2 border border-amber-400/30 shadow-lg">
+      <i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i> Hacer Llover Flores
+    </button>
+  </div>
+
+  <div class="bouquet-wrap" onclick="sparkleBurst(event)" title="¡Toca el ramo para regalar flores!">
+    <svg viewBox="0 0 900 900" aria-label="Ramo de flores amarillas">
+
+      <defs>
+        <linearGradient id="yellowA" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#fff6a8"/>
+          <stop offset=".42" stop-color="#ffd84d"/>
+          <stop offset="1" stop-color="#e9a900"/>
+        </linearGradient>
+        <linearGradient id="yellowB" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#fff076"/>
+          <stop offset=".5" stop-color="#f7c52e"/>
+          <stop offset="1" stop-color="#d99600"/>
+        </linearGradient>
+        <linearGradient id="yellowC" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#ffe987"/>
+          <stop offset=".5" stop-color="#eeb82c"/>
+          <stop offset="1" stop-color="#c98200"/>
+        </linearGradient>
+        <linearGradient id="green" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#668c46"/>
+          <stop offset=".5" stop-color="#385d31"/>
+          <stop offset="1" stop-color="#203d27"/>
+        </linearGradient>
+        <linearGradient id="paper" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#fff5d7"/>
+          <stop offset=".55" stop-color="#e8d3a5"/>
+          <stop offset="1" stop-color="#c5a878"/>
+        </linearGradient>
+        <linearGradient id="ribbon" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#ffe76c"/>
+          <stop offset=".5" stop-color="#f4c52f"/>
+          <stop offset="1" stop-color="#c58d0b"/>
+        </linearGradient>
+        <filter id="soft">
+          <feGaussianBlur stdDeviation="1.3"/>
+        </filter>
+      </defs>
+
+      <!-- Tall rear stems -->
+      <g fill="none" stroke-linecap="round">
+        <path d="M450 700 Q355 525 170 300" stroke="#416b35" stroke-width="8"/>
+        <path d="M450 705 Q405 490 285 225" stroke="#4d7739" stroke-width="8"/>
+        <path d="M450 705 Q435 470 380 175" stroke="#557f3b" stroke-width="8"/>
+        <path d="M450 705 Q470 450 470 145" stroke="#3e6832" stroke-width="9"/>
+        <path d="M450 705 Q510 460 570 190" stroke="#557c3b" stroke-width="8"/>
+        <path d="M450 705 Q560 500 680 260" stroke="#416b35" stroke-width="8"/>
+        <path d="M450 705 Q620 540 755 355" stroke="#52783a" stroke-width="8"/>
+        <path d="M450 705 Q360 535 245 390" stroke="#416d34" stroke-width="7"/>
+        <path d="M450 705 Q530 520 635 390" stroke="#426b34" stroke-width="7"/>
+      </g>
+
+      <!-- Rear leaves -->
+      <g class="sway" fill="url(#green)" stroke="#284a2c" stroke-width="2">
+        <path d="M225 445 Q135 365 128 285 Q205 300 246 375 Q250 410 225 445Z"/>
+        <path d="M285 350 Q200 280 205 200 Q275 225 312 300 Q315 330 285 350Z"/>
+        <path d="M350 300 Q290 210 315 145 Q380 195 390 275 Q382 300 350 300Z"/>
+        <path d="M550 320 Q575 215 650 180 Q658 270 590 335 Q565 345 550 320Z"/>
+        <path d="M620 385 Q690 275 765 270 Q742 365 655 415 Q632 416 620 385Z"/>
+        <path d="M680 475 Q760 385 835 405 Q790 485 705 510 Q682 505 680 475Z"/>
+      </g>
+
+      <!-- Small back flowers -->
+      <g class="flower delay2">
+        <g transform="translate(178 290) scale(.72)"><use href="#rose"/></g>
+        <g transform="translate(282 210) scale(.72)"><use href="#rose2"/></g>
+        <g transform="translate(380 168) scale(.66)"><use href="#rose"/></g>
+        <g transform="translate(472 142) scale(.62)"><use href="#rose2"/></g>
+        <g transform="translate(575 192) scale(.70)"><use href="#rose"/></g>
+        <g transform="translate(685 260) scale(.68)"><use href="#rose2"/></g>
+        <g transform="translate(755 350) scale(.64)"><use href="#rose"/></g>
+      </g>
+
+      <!-- Middle stems -->
+      <g fill="none" stroke="#3f6933" stroke-width="8" stroke-linecap="round">
+        <path d="M450 710 Q330 590 235 455"/>
+        <path d="M450 710 Q385 565 335 420"/>
+        <path d="M450 710 Q430 560 410 390"/>
+        <path d="M450 710 Q465 560 500 380"/>
+        <path d="M450 710 Q520 575 570 430"/>
+        <path d="M450 710 Q570 610 660 470"/>
+      </g>
+
+      <!-- Middle leaves -->
+      <g fill="url(#green)" stroke="#294a2c" stroke-width="2">
+        <path d="M255 505 Q175 450 175 375 Q245 390 280 455 Q280 485 255 505Z"/>
+        <path d="M330 485 Q260 415 280 345 Q345 380 360 450 Q355 475 330 485Z"/>
+        <path d="M385 555 Q310 510 310 440 Q375 455 410 515 Q410 540 385 555Z"/>
+        <path d="M535 535 Q585 455 655 450 Q635 525 560 565 Q540 565 535 535Z"/>
+        <path d="M590 555 Q675 500 730 530 Q690 600 615 595 Q590 585 590 555Z"/>
+      </g>
+
+      <!-- Main flowers: 14, arranged with natural overlap and depth -->
+      <g class="flower">
+        <g transform="translate(220 405) scale(.82) rotate(-10)"><use href="#rose2"/></g>
+        <g transform="translate(295 345) scale(.91) rotate(8)"><use href="#rose"/></g>
+        <g transform="translate(365 300) scale(.88) rotate(-5)"><use href="#rose2"/></g>
+        <g transform="translate(445 275) scale(1.02) rotate(4)"><use href="#rose"/></g>
+        <g transform="translate(530 300) scale(.93) rotate(-7)"><use href="#rose2"/></g>
+        <g transform="translate(605 350) scale(.90) rotate(8)"><use href="#rose"/></g>
+        <g transform="translate(675 415) scale(.80) rotate(-7)"><use href="#rose2"/></g>
+
+        <g class="delay">
+          <g transform="translate(285 455) scale(.88) rotate(-4)"><use href="#rose"/></g>
+          <g transform="translate(370 420) scale(.98) rotate(7)"><use href="#rose2"/></g>
+          <g transform="translate(455 390) scale(1.05) rotate(-5)"><use href="#rose"/></g>
+          <g transform="translate(545 420) scale(.98) rotate(5)"><use href="#rose2"/></g>
+          <g transform="translate(625 465) scale(.87) rotate(-6)"><use href="#rose"/></g>
+          <g transform="translate(340 510) scale(.72) rotate(6)"><use href="#rose2"/></g>
+          <g transform="translate(555 515) scale(.74) rotate(-7)"><use href="#rose"/></g>
+        </g>
+      </g>
+
+      <!-- Front leaves to make the bouquet fuller -->
+      <g class="sway2" fill="url(#green)" stroke="#294a2c" stroke-width="2">
+        <path d="M280 565 Q205 520 190 455 Q260 470 305 525 Q308 550 280 565Z"/>
+        <path d="M330 600 Q245 580 220 520 Q295 520 350 565 Q355 590 330 600Z"/>
+        <path d="M620 575 Q700 525 755 550 Q710 615 645 610 Q620 600 620 575Z"/>
+        <path d="M570 610 Q650 585 700 625 Q645 680 585 650 Q565 635 570 610Z"/>
+        <path d="M395 590 Q330 555 325 500 Q390 520 420 565 Q420 585 395 590Z"/>
+        <path d="M505 595 Q560 545 615 555 Q595 620 530 625 Q505 620 505 595Z"/>
+      </g>
+
+      <!-- Flower definitions -->
+      <defs>
+        <g id="rose">
+          <circle cx="0" cy="0" r="67" fill="url(#yellowA)"/>
+          <g fill="url(#yellowB)">
+            <ellipse cx="0" cy="-39" rx="29" ry="43"/>
+            <ellipse cx="37" cy="-12" rx="43" ry="29" transform="rotate(35 37 -12)"/>
+            <ellipse cx="23" cy="32" rx="42" ry="28" transform="rotate(-20 23 32)"/>
+            <ellipse cx="-25" cy="31" rx="42" ry="28" transform="rotate(20 -25 31)"/>
+            <ellipse cx="-38" cy="-10" rx="43" ry="29" transform="rotate(-35 -38 -10)"/>
+          </g>
+          <g fill="url(#yellowC)">
+            <ellipse cx="0" cy="-25" rx="20" ry="34"/>
+            <ellipse cx="24" cy="3" rx="32" ry="19" transform="rotate(40 24 3)"/>
+            <ellipse cx="-24" cy="3" rx="32" ry="19" transform="rotate(-40 -24 3)"/>
+            <ellipse cx="0" cy="23" rx="30" ry="18"/>
+          </g>
+          <path d="M-14 0 Q0 -20 14 0 Q5 22 -14 0Z" fill="#d58b00"/>
+          <circle cx="0" cy="0" r="8" fill="#fff0a0"/>
+        </g>
+
+        <g id="rose2">
+          <circle cx="0" cy="0" r="63" fill="url(#yellowB)"/>
+          <g fill="url(#yellowA)">
+            <ellipse cx="0" cy="-37" rx="27" ry="41"/>
+            <ellipse cx="36" cy="-8" rx="41" ry="27" transform="rotate(38 36 -8)"/>
+            <ellipse cx="23" cy="31" rx="40" ry="26" transform="rotate(-22 23 31)"/>
+            <ellipse cx="-25" cy="30" rx="40" ry="26" transform="rotate(22 -25 30)"/>
+            <ellipse cx="-37" cy="-9" rx="41" ry="27" transform="rotate(-38 -37 -9)"/>
+          </g>
+          <g fill="url(#yellowC)">
+            <ellipse cx="0" cy="-23" rx="18" ry="31"/>
+            <ellipse cx="23" cy="2" rx="30" ry="18" transform="rotate(42 23 2)"/>
+            <ellipse cx="-23" cy="2" rx="30" ry="18" transform="rotate(-42 -23 2)"/>
+            <ellipse cx="0" cy="21" rx="28" ry="17"/>
+          </g>
+          <path d="M-13 0 Q0 -18 13 0 Q4 20 -13 0Z" fill="#cf8500"/>
+          <circle cx="0" cy="0" r="7" fill="#fff1a3"/>
+        </g>
+      </defs>
+
+      <!-- Wrapping paper over lower stems -->
+      <path d="M250 570 Q450 650 650 570 L585 805 Q450 855 315 805Z"
+            fill="url(#paper)" opacity=".97"/>
+      <path d="M285 590 Q450 665 615 590 L575 760 Q450 795 325 760Z"
+            fill="#fff8df" opacity=".18"/>
+      <path d="M315 610 Q450 685 585 610" fill="none" stroke="#b99962" stroke-width="3" opacity=".5"/>
+
+      <!-- Ribbon -->
+      <path d="M372 680 Q450 705 528 680 L520 730 Q450 750 380 730Z"
+            fill="url(#ribbon)" stroke="#b88913" stroke-width="2"/>
+      <path d="M395 720 Q350 785 300 805 Q345 745 382 715Z"
+            fill="url(#ribbon)" stroke="#b88913" stroke-width="2"/>
+      <path d="M505 720 Q550 785 600 805 Q555 745 518 715Z"
+            fill="url(#ribbon)" stroke="#b88913" stroke-width="2"/>
+      <ellipse cx="450" cy="704" rx="35" ry="26" fill="#f5c52f" stroke="#b88913" stroke-width="2"/>
+      <ellipse cx="450" cy="704" rx="18" ry="13" fill="#ffe778"/>
+    </svg>
+  </div>
+</div>
+
+<div id="letterModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
+  <div class="glass-card rounded-2xl max-w-md w-full p-6 text-center relative border border-amber-400/40 shadow-2xl">
+    <button onclick="closeLetterModal()" class="absolute top-4 right-4 text-amber-200/70 hover:text-white w-8 h-8 rounded-full flex items-center justify-center bg-white/10 transition">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <div class="w-12 h-12 bg-amber-500/20 rounded-full flex items-center justify-center mx-auto mb-3 text-amber-300 text-xl">
+      <i class="fa-solid fa-seedling"></i>
+    </div>
+    <h3 class="text-xl font-semibold text-amber-200 mb-2 font-['Montserrat']">Para ti, en este 21 de Septiembre 🌼</h3>
+    <div class="text-amber-100/90 text-sm leading-relaxed space-y-3 mb-5 text-left bg-black/20 p-4 rounded-xl border border-white/5 max-h-60 overflow-y-auto">
+      <p>"Ella sabía que él era para ella, porque a cada palabra suya le seguía una flor amarilla..." 💛</p>
+      <p>Hoy en el comienzo de la primavera y en este día tan especial, quiero regalarte estas flores amarillas como símbolo de lo mucho que iluminas mi vida con tu sonrisa y tu hermosa forma de ser.</p>
+      <p>Gracias por cada momento compartido y por hacer que cada día florezca la alegría. ¡Feliz 21 de septiembre!</p>
+    </div>
+    <div class="flex items-center justify-center gap-2">
+      <button onclick="closeLetterModal()" class="px-6 py-2.5 rounded-full bg-gradient-to-r from-amber-500 to-yellow-500 text-gray-950 font-semibold text-sm shadow-lg hover:brightness-110 transition">
+        Guardar en el Corazón 💛
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Falling yellow flowers / petals canvas animation
+const canvas=document.getElementById('petals');
+const ctx=canvas.getContext('2d');
+let W,H,items=[];
+
+function resize(){
+  W=canvas.width=window.innerWidth*devicePixelRatio;
+  H=canvas.height=window.innerHeight*devicePixelRatio;
+  canvas.style.width=innerWidth+'px';
+  canvas.style.height=innerHeight+'px';
+  ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+}
+
+function makePetal(){
+  return {
+    x:Math.random()*innerWidth,
+    y:-30-Math.random()*innerHeight,
+    size:3+Math.random()*5,
+    speed:.7+Math.random()*1.35,
+    drift:(Math.random()-.5)*.7,
+    rot:Math.random()*Math.PI*2,
+    spin:(Math.random()-.5)*.035,
+    opacity:.28+Math.random()*.5,
+    type:Math.random()<.35?'flower':'petal'
+  };
+}
+
+function reset(p){
+  p.x=Math.random()*innerWidth;
+  p.y=-20-Math.random()*80;
+  p.size=3+Math.random()*5;
+  p.speed=.7+Math.random()*1.35;
+  p.drift=(Math.random()-.5)*.7;
+  p.rot=Math.random()*Math.PI*2;
+  p.spin=(Math.random()-.5)*.035;
+}
+
+function drawPetal(p){
+  ctx.save();
+  ctx.translate(p.x,p.y);
+  ctx.rotate(p.rot);
+  ctx.globalAlpha=p.opacity;
+  ctx.fillStyle='#f7cf3a';
+  if(p.type==='flower'){
+    for(let i=0;i<5;i++){
+      ctx.save();ctx.rotate(i*Math.PI*2/5);
+      ctx.beginPath();
+      ctx.ellipse(0,-p.size*1.5,p.size*.8,p.size*1.65,0,0,Math.PI*2);
+      ctx.fill();ctx.restore();
+    }
+    ctx.fillStyle='#ffe98a';
+    ctx.beginPath();ctx.arc(0,0,p.size*.45,0,Math.PI*2);ctx.fill();
+  }else{
+    ctx.beginPath();
+    ctx.ellipse(0,0,p.size*.65,p.size*1.35,.25,0,Math.PI*2);
+    ctx.fill();
+  }
+  ctx.restore();
+}
+
+function animate(){
+  ctx.clearRect(0,0,innerWidth,innerHeight);
+  for(const p of items){
+    p.y+=p.speed;
+    p.x+=p.drift+Math.sin(p.y*.012)*.25;
+    p.rot+=p.spin;
+    if(p.y>innerHeight+35){reset(p)}
+    drawPetal(p);
+  }
+  requestAnimationFrame(animate);
+}
+
+resize();
+items=Array.from({length:55},makePetal);
+window.addEventListener('resize',resize);
+animate();
+
+// Interactive Sparkle Burst on Click
+function sparkleBurst(e){
+  const rect=e.currentTarget.getBoundingClientRect();
+  const x=e.clientX-rect.left;
+  const y=e.clientY-rect.top;
+  
+  for(let i=0; i<12; i++){
+    items.push({
+      x: e.clientX + (Math.random()-0.5)*80,
+      y: e.clientY + (Math.random()-0.5)*80,
+      size: 4 + Math.random()*6,
+      speed: -(2 + Math.random()*3),
+      drift: (Math.random()-.5)*2,
+      rot: Math.random()*Math.PI*2,
+      spin: (Math.random()-.5)*0.1,
+      opacity: 0.9,
+      type: 'flower'
+    });
+  }
+  
+  // Play subtle chime
+  playChime();
+}
+
+function triggerConfetti(){
+  for(let i=0; i<30; i++){
+    items.push({
+      x: Math.random()*innerWidth,
+      y: -20,
+      size: 4 + Math.random()*6,
+      speed: 1.5 + Math.random()*2.5,
+      drift: (Math.random()-.5)*1.5,
+      rot: Math.random()*Math.PI*2,
+      spin: (Math.random()-.5)*0.08,
+      opacity: 0.85,
+      type: Math.random()<.5?'flower':'petal'
+    });
+  }
+  playChime();
+}
+
+// Modal management
+function openLetterModal(){
+  const modal=document.getElementById('letterModal');
+  modal.classList.remove('hidden');
+  setTimeout(()=>modal.classList.remove('opacity-0'),10);
+}
+
+function closeLetterModal(){
+  const modal=document.getElementById('letterModal');
+  modal.classList.add('opacity-0');
+  setTimeout(()=>modal.classList.add('hidden'),300);
+}
+
+let audioCtx=null;
+let isPlaying=false;
+let melodyInterval=null;
+
+function playChime(){
+  try {
+    if(!audioCtx) audioCtx=new (window.AudioContext || window.webkitAudioContext)();
+    if(audioCtx.state==='suspended') audioCtx.resume();
+    
+    const osc=audioCtx.createOscillator();
+    const gain=audioCtx.createGain();
+    osc.type='sine';
+    osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
+    osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.3); // A5
+    
+    gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.6);
+    
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.6);
+  } catch(e) {
+    console.log('Audio not supported or blocked');
+  }
+}
+
+function toggleMusic(){
+  const btnText=document.getElementById('musicText');
+  const icon=document.getElementById('musicIcon');
+  
+  if(!isPlaying){
+    try {
+      if(!audioCtx) audioCtx=new (window.AudioContext || window.webkitAudioContext)();
+      if(audioCtx.state==='suspended') audioCtx.resume();
+      
+      isPlaying=true;
+      btnText.textContent="Pausar Melodía";
+      icon.className="fa-solid fa-volume-high text-amber-300 animate-bounce";
+      
+      // Simple sweet notes sequence (Flores Amarillas vibe)
+      const notes=[523.25, 587.33, 659.25, 698.46, 783.99, 880];
+      let idx=0;
+      
+      melodyInterval=setInterval(()=>{
+        if(!isPlaying) return;
+        const osc=audioCtx.createOscillator();
+        const gain=audioCtx.createGain();
+        osc.type='triangle';
+        osc.frequency.setValueAtTime(notes[idx % notes.length], audioCtx.currentTime);
+        
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.8);
+        
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.8);
+        idx++;
+      }, 900);
+      
+    } catch(e) {
+      console.log(e);
+    }
+  } else {
+    isPlaying=false;
+    btnText.textContent="Reproducir Melodía";
+    icon.className="fa-solid fa-music text-amber-300";
+    if(melodyInterval) clearInterval(melodyInterval);
+  }
+}
+</script>
+</body>
+</html>
