@@ -68,6 +68,11 @@
 </head>
 
 <body>
+
+<audio id="backgroundMusic" loop>
+  <source src="cancion.mp3" type="audio/mpeg">
+</audio>
+
 <canvas id="petals"></canvas>
 
 <div class="content">
@@ -82,7 +87,7 @@
       <i class="fa-solid fa-envelope-open-text text-amber-300"></i> Leer Cartita
     </button>
     <button onclick="toggleMusic()" id="musicBtn" class="px-4 py-2 rounded-full glass-card text-amber-200 font-medium text-sm hover:bg-amber-500/20 transition flex items-center gap-2 border border-amber-400/30 shadow-lg">
-      <i class="fa-solid fa-music text-amber-300" id="musicIcon"></i> <span id="musicText">Reproducir Melodía</span>
+      <i class="fa-solid fa-music text-amber-300" id="musicIcon"></i> <span id="musicText">Reproducir</span>
     </button>
     <button onclick="triggerConfetti()" class="px-4 py-2 rounded-full glass-card text-amber-200 font-medium text-sm hover:bg-amber-500/20 transition flex items-center gap-2 border border-amber-400/30 shadow-lg">
       <i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i> Hacer Llover Flores
@@ -456,48 +461,24 @@ function playChime(){
 }
 
 function toggleMusic(){
-  const btnText=document.getElementById('musicText');
-  const icon=document.getElementById('musicIcon');
-  
-  if(!isPlaying){
-    try {
-      if(!audioCtx) audioCtx=new (window.AudioContext || window.webkitAudioContext)();
-      if(audioCtx.state==='suspended') audioCtx.resume();
-      
-      isPlaying=true;
-      btnText.textContent="Pausar Melodía";
-      icon.className="fa-solid fa-volume-high text-amber-300 animate-bounce";
-      
-      // Simple sweet notes sequence (Flores Amarillas vibe)
-      const notes=[523.25, 587.33, 659.25, 698.46, 783.99, 880];
-      let idx=0;
-      
-      melodyInterval=setInterval(()=>{
-        if(!isPlaying) return;
-        const osc=audioCtx.createOscillator();
-        const gain=audioCtx.createGain();
-        osc.type='triangle';
-        osc.frequency.setValueAtTime(notes[idx % notes.length], audioCtx.currentTime);
-        
-        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.8);
-        
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.8);
-        idx++;
-      }, 900);
-      
-    } catch(e) {
-      console.log(e);
-    }
+  const music = document.getElementById('backgroundMusic');
+  const btnText = document.getElementById('musicText');
+  const icon = document.getElementById('musicIcon');
+
+  if (music.paused) {
+    music.play()
+      .then(() => {
+        btnText.textContent = "Pausar Canción";
+        icon.className = "fa-solid fa-volume-high text-amber-300 animate-bounce";
+      })
+      .catch(error => {
+        console.log("No se pudo reproducir la canción:", error);
+      });
+
   } else {
-    isPlaying=false;
-    btnText.textContent="Reproducir Melodía";
-    icon.className="fa-solid fa-music text-amber-300";
-    if(melodyInterval) clearInterval(melodyInterval);
+    music.pause();
+    btnText.textContent = "Reproducir Canción";
+    icon.className = "fa-solid fa-music text-amber-300";
   }
 }
 </script>
